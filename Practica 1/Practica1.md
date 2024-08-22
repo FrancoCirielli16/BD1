@@ -48,15 +48,20 @@ Para cada subsidio se realiza una liquidación mensual, de la cual se registra a
 Para el diagrama de Entidades y Relaciones propuesto responda si las siguientes afirmaciones son verdaderas (V) o falsas (F). Justificar: 
  
 A.  La relación tiene está mal definida, ya que debería ser entre persona y 
-categoría_monotributo. 
-B.  La relación realiza está bien definida, ya que todas las personas realizan actividades. 
-C.  La jerarquía de Persona representa correctamente la problemática. 
+categoría_monotributo. F
+
+B.  La relación realiza está bien definida, ya que todas las personas realizan actividades. V
+
+C.  La jerarquía de Persona representa correctamente la problemática. F
+
 D.  La relación pertenece está mal definida, ya que no puede haber atributos en las 
-relaciones. 
-E.  La agregación de la relación posee está correctamente definida ya que con una relación 
-uno a muchos se puede agregar. 
+relaciones. V
+
+E.  La agregación de la relación posee está correctamente definida ya que con una relación uno a muchos se puede agregar. 
+
 F.  Con este diseño es posible conocer el saldo disponible del subsidio para futuras 
 liquidaciones. 
+
 G.  El modelo no tiene redundancia de datos. 
 
 
