@@ -27,5 +27,5 @@ desarrollo de un sistema de información usando bases de datos.
 
 <h2>Practicas</h2>
 
-- [Modelo de Entidades y Relaciones](/Practica%1\Practica1.md)
+- [Modelo de Entidades y Relaciones](/Practica%1/Practica1.md)
 
