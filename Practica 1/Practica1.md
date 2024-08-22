@@ -28,9 +28,32 @@ c. Ajuste el modelo para representar museos de dos tipos: de arte contemporáneo
 
 ## Ejercicio 2 Verdadero/ Falso. Justificar
 
-A.  En una especialización, la entidad padre no modela datos que realmente existan, sino 
-que sirve para representar los aspectos comunes de las entidades hijas. 
-B.  En una agregación, la cardinalidad mínima debe ser mayor a 0  
-C.  Una entidad puede no tener un atributo identificador en el modelo ER  
-D.  No es correcto modelar atributos en las relaciones en un modelo ER
+A.  En una especialización, la entidad padre no modela datos que realmente existan, sino que sirve para representar los aspectos comunes de las entidades hijas. F 
+
+B.  En una agregación, la cardinalidad mínima debe ser mayor a 0  F
+
+C.  Una entidad puede no tener un atributo identificador en el modelo ER F
+
+D.  No es correcto modelar atributos en las relaciones en un modelo ER F
  
+
+
+
+![alt text](image-3.png)
+
+Para el diagrama de Entidades y Relaciones propuesto responda si las siguientes afirmaciones 
+son verdaderas (V) o falsas (F). Justificar: 
+ 
+A.  La relación tiene está mal definida, ya que debería ser entre persona y categoría_monotributo. F
+
+B.  La relación realiza está bien definida, ya que todas las personas realizan actividades. 
+
+C.  La jerarquía de Persona representa correctamente la problemática. 
+
+D.  La relación pertenece está mal definida, ya que no puede haber atributos en las relaciones. 
+
+E.  La agregación de la relación posee está correctamente definida ya que con una relación uno a muchos se puede agregar. 
+
+F.  Con este diseño es posible conocer el saldo disponible del subsidio para futuras liquidaciones. 
+
+G.  El modelo no tiene redundancia de datos
