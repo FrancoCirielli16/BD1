@@ -21,11 +21,11 @@ desarrollo de un sistema de información usando bases de datos.
 
 <h2>Teorias</h2>
 
-- [Clase 1 - Modelo de Datos ](/Teorias/2024-08-14_Bases%de%Datos%1_clase_01_Modelo%de%Datos.pdf)
+- [Clase 1 - Modelo de Datos ](/Teorias/2024-08-14_Bases%20de%20Datos%201_clase_01_Modelo%20de%20Datos.pdf)
 
 
 
 <h2>Practicas</h2>
 
-- [Modelo de Entidades y Relaciones](/Practica%1/Practica1.md)
+- [Modelo de Entidades y Relaciones](/Practica%201/Practica1.md)
 
