@@ -165,8 +165,8 @@ Una aplicación registra distintos entrenamientos de sus usuarios (correr, nadar
 Una funcionalidad de la aplicación que los usuario quisieran tener es la posibilidad de definir un objetivo de tiempo asignado a cada entrenamiento, del cual se guarda el tiempo a alcanzar y el porcentaje obtenido. Los usuarios también pueden obtener logros por su desempeño, y muchos de los logros pueden obtenerse varias veces, por ejemplo un mismo usuario puede obtener el logro por "racha de entrenamiento de 5 días" en diferentes fechas. De cada logro se guarda un nombre y una descripción, y cada vez que un usuario obtiene un premio, se guarda la fecha de obtención (si el premio es repetido, deben guardarse todas las fechas)
 
 
-#### Preguntar si se puede colocar en logro el atributo fecha. ????
-
+** falta modelar premio y reconocimiento ** 
+** trolleo con la fecha, no es un entidad ** (La entidad es reconocimineto y un atributo es la fecha y de esa entidad sale premio 0 a 1 a 0 a 1)  
 ![alt text](imagenes/image-6.png)
 
 
@@ -189,6 +189,8 @@ Una funcionalidad de la aplicación que los usuario quisieran tener es la posibi
 Una empresa dedicada a la construcción de muebles para el hogar, desea poseer una base de datos para administrar la producción y la asignación horaria de sus empleados. 
 La empresa está dividida en departamentos y en cada departamento se asignan empleados. Cada empleado puede trabajar en más de un departamento y en un departamento trabajan diversos empleados. Cada empleado realiza turnos para cada departamento en el que trabaja. Un empleado puede realizar más de un turno en cada departamento y en el mismo turno hay diversos empleados de un departamento. 
 De los departamentos se conoce el nombre, el responsable (que es un empleado asignado al departamento) y la producción promedio del último año fiscal. De los empleados se conoce el nombre, el apellido, el dni y un número de legajo. De los turnos se conoce el día de la semana, la hora de inicio y la hora de fin. Cada departamento se especializa en la construcción de un tipo de mueble específico. De cada tipo de mueble se conocen la cantidad de horas-hombre promedio y el volumen que ocupa. Con el objetivo de llevar cuenta de los materiales necesarios para la construcción de cada tipo de mueble, se desea registrar los distintos materiales (diferentes tipos de madera, pegamento, tornillos, clavos, etc.). De cada material se conoce su nombre, el stock máximo que se puede tener, y la cantidad de dicho material necesario para cada tipo de mueble
+
+** PUEDE HABER MAS DE UN DEPARTAMENTO ESPECIALIZADO EN UN MUEBLE ** 
 
 
 Opcion 1 preguntar: 
