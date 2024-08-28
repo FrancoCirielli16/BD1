@@ -167,7 +167,7 @@ Una funcionalidad de la aplicación que los usuario quisieran tener es la posibi
 
 #### Preguntar si se puede colocar en logro el atributo fecha. ????
 
-![alt text](imagenes/image-6.png)
+![alt text](imagenes/image-6.2.png)
 
 
 - Usuario(**Mail**,Nombre,Peso,Altura)
