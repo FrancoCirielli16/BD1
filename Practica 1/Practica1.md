@@ -165,9 +165,10 @@ Una aplicación registra distintos entrenamientos de sus usuarios (correr, nadar
 Una funcionalidad de la aplicación que los usuario quisieran tener es la posibilidad de definir un objetivo de tiempo asignado a cada entrenamiento, del cual se guarda el tiempo a alcanzar y el porcentaje obtenido. Los usuarios también pueden obtener logros por su desempeño, y muchos de los logros pueden obtenerse varias veces, por ejemplo un mismo usuario puede obtener el logro por "racha de entrenamiento de 5 días" en diferentes fechas. De cada logro se guarda un nombre y una descripción, y cada vez que un usuario obtiene un premio, se guarda la fecha de obtención (si el premio es repetido, deben guardarse todas las fechas)
 
 
-#### Preguntar si se puede colocar en logro el atributo fecha. ????
+
 
 ![alt text](imagenes/image-6.2.png)
+
 
 
 - Usuario(**Mail**,Nombre,Peso,Altura)
@@ -191,12 +192,12 @@ La empresa está dividida en departamentos y en cada departamento se asignan emp
 De los departamentos se conoce el nombre, el responsable (que es un empleado asignado al departamento) y la producción promedio del último año fiscal. De los empleados se conoce el nombre, el apellido, el dni y un número de legajo. De los turnos se conoce el día de la semana, la hora de inicio y la hora de fin. Cada departamento se especializa en la construcción de un tipo de mueble específico. De cada tipo de mueble se conocen la cantidad de horas-hombre promedio y el volumen que ocupa. Con el objetivo de llevar cuenta de los materiales necesarios para la construcción de cada tipo de mueble, se desea registrar los distintos materiales (diferentes tipos de madera, pegamento, tornillos, clavos, etc.). De cada material se conoce su nombre, el stock máximo que se puede tener, y la cantidad de dicho material necesario para cada tipo de mueble
 
 
-Opcion 1 preguntar: 
+Opcion 1 esta bien: 
 
 ![alt text](imagenes/image-8.png)
 
 
-Opcion 2 preguntar:
+Opcion 2 esta bien pero si se quiere luego armar algun tipo de historial no es posible:
 ![alt text](imagenes/image-9.png)
 
 
@@ -215,6 +216,9 @@ Opcion 2 preguntar:
 
 En una red social hay usuarios que publican contenidos y realizan publicaciones. Los usuarios pueden crear álbumes y agregar a otros usuarios para que participen en los mismos. Cada usuario que participa en un álbum puede cargar varios contenidos, que pueden ser fotos o vídeos. De las fotos se conoce la resolución y el formato, mientras que de los videos se conoce la duración. De todo contenido se guarda un comentario y la fecha de publicación, y también debe ser posible saber qué usuario lo cargó. Para cada álbum, además de los participantes, es importante saber quién fue su creador, y también su fecha de creación, nombre y descripción. Los usuarios también realizan publicaciones. De cada publicación se guarda un texto, fecha de publicación y, opcionalmente, un contenido que puede ser una foto o un video (a lo sumo uno). Las publicaciones también contienen etiquetas que facilitan su búsqueda. Muchas publicaciones pueden tener la misma etiqueta, de la cual se conoce sólo un nombre. De cada usuario se conoce su nombre de usuario, email y nombre completo
 
+**Perdi el archivo donde puedo corregir mi diagrama la correccion mas importante es que falta agregar la relacion participa de la agregacion es decir usuario participa en un album porque sino la gente que participa no puede cargar contenido**
+
+
 ![alt text](imagenes/Punto9.drawio.png)
 
 - Etiqueta(**#Etiqueta**,Nombre)
@@ -229,10 +233,19 @@ En una red social hay usuarios que publican contenidos y realizan publicaciones.
 - posee(**#Etiqueta,#Publicacion**)
 - crea(**Email,#Album**)
 - Agrega(**Email_owner,Email_invitado,#Album**)
+- Participa(**Email,#Album**)
 
 ### 10) Hoteles 
 Una aplicación se dedica a listar precios de hoteles publicados en diferentes sitios. Los usuarios de la aplicación pueden incluso hallar distintos precios de una misma habitación de un mismo hotel, según el sitio que lo publica. Cuando un usuario busca una habitación, especificando un rango de fechas y cantidad de personas, la aplicación lista los resultados. Cada resultado de búsqueda indica una habitación de un hotel y el sitio que la pública, junto con el precio por noche. De los hoteles se conoce el nombre, estrellas y donde se encuentran ubicados. Las habitaciones de un hotel pueden ser dobles o triples, aunque a veces se publican habitaciones de otras capacidades. Además, de cada habitación se conocen detalles y categoría, que no están estandarizadas y cada hotel define por su cuenta. El precio por noche de una habitación depende de cada sitio que lo publica, es decir, para una misma habitación de un mismo hotel, pueden haber varios sitios que publican el precio por noche. Este precio también varía con el tiempo, y es necesario llevar registro de los distintos precios en diferentes rangos de fechas, dado que las posteriores búsquedas se realizan para fechas distintas. De los usuarios se conoce el email, nombre y contraseña.
 
 
+**Preguntar es confunso**
+
+![alt text](imagenes/punto10.drawio.png)
+
+
 ### 11) Red de Farmacias 
 Una red de farmacias desea mantener información acerca de los productos que comercializa, sus clientes, las ventas realizadas a sus clientes y los vendedores que trabajan en ella. La red de farmacias posee diferentes sucursales (farmacias) ubicadas en diferentes puntos estratégicos del país. Los productos pueden ser de droguería, perfumería o accesorios. En cada farmacia de la red, se pueden comercializar diferentes tipos de productos, y un tipo de producto se puede comercializar en diferentes farmacias de la red. De los clientes se conoce su nombre, sus domicilios y sus teléfonos. De los vendedores se conoce su nombre, número de legajo y fecha de ingreso a la red de farmacias. Un vendedor puede trabajar en más de una farmacia y en una farmacia pueden trabajar varios vendedores. Para cada vendedor se conoce en qué horario debe estar en cada farmacia. Se sabe que un vendedor puede trabajar en más de un turno para la misma sucursal.
+
+
+![alt text](imagenes/punto11.drawio.png)
