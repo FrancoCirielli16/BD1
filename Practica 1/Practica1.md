@@ -243,6 +243,23 @@ Una aplicación se dedica a listar precios de hoteles publicados en diferentes s
 
 ![alt text](imagenes/punto10.drawio.png)
 
+- Hotel (**#hotel**, nombre, estrellas, ubicación)
+
+- Tiene (#hotel, **#habitación**)
+
+- Habitación (**#habitación**, categoría, detalles, tipo)
+
+- encuentra (**#web, #habitación**)
+
+- web (**#sitio**, nombre)
+
+- Busqueda (**#búsqueda**, fechas, cantidad)
+
+- Busca (**#búsqueda, #usuario**)
+
+- Usuario (**#Email**, nombre, Password)
+
+- Realiza (**#Busqueda**,#Email)
 
 ### 11) Red de Farmacias 
 Una red de farmacias desea mantener información acerca de los productos que comercializa, sus clientes, las ventas realizadas a sus clientes y los vendedores que trabajan en ella. La red de farmacias posee diferentes sucursales (farmacias) ubicadas en diferentes puntos estratégicos del país. Los productos pueden ser de droguería, perfumería o accesorios. En cada farmacia de la red, se pueden comercializar diferentes tipos de productos, y un tipo de producto se puede comercializar en diferentes farmacias de la red. De los clientes se conoce su nombre, sus domicilios y sus teléfonos. De los vendedores se conoce su nombre, número de legajo y fecha de ingreso a la red de farmacias. Un vendedor puede trabajar en más de una farmacia y en una farmacia pueden trabajar varios vendedores. Para cada vendedor se conoce en qué horario debe estar en cada farmacia. Se sabe que un vendedor puede trabajar en más de un turno para la misma sucursal.
