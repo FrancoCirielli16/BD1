@@ -204,14 +204,16 @@ DF:
 
 #### Iteracion 1:
 
-En este casi podemos ver que tenemos una DF en la que X no sea superclave
+En este caso podemos ver que tenemos al menos una DF, por ej DF5, en la que X no sea superclave en el esquema
 
-Particionamos el esquema siguiendo la DF5 `email_adicinal --> nombre_adicional`
+Particionamos el esquema usando la DF5 `email_adicinal --> nombre_adicional`
 
 * F1(**email_adicional**,nombre_adicional)
 
-* F2(**#suscripcion,#contenido**, email, nombre_usuario, #plan, nombre_plan texto_condiciones, precio, titulo,sinopsis, duracion, fecha_adicional)
+* F2(**#suscripcion,email_adicional,#contenido**, email, nombre_usuario, #plan, nombre_plan texto_condiciones, precio, titulo,sinopsis, duracion, fecha_adicional)
 
+F1 esta en BCNF porque solo vale la DF5 donde email_adicional es clave del esquema.
+En F2 valen DF1, DF2,DF3, DF4,DF6 por validacion simple
 F1 ⋂ F2 = email_adicional, que es clave en F1. Por lo tanto, no se perdió información.
 
 
@@ -229,9 +231,73 @@ F1 ⋂ F2 = email_adicional, que es clave en F1. Por lo tanto, no se perdió inf
 
 #### Iteracion 2:
 
+F1 cumple con BCNF pero F2 sigue teniendo DF no triviales o en la que X no es una superclave
+
+por lo que particionamos F2 siguiendo el esquema DF2
+
+F3(**email**,nombre_usuario)
+F4(**#suscripcion,email_adicional,#contenido**, email, #plan, nombre_plan texto_condiciones, precio, titulo,sinopsis, duracion, fecha_adicional)
 
 
+F3 ⋂ F4 --> email no perdemos informacion
+En F4 valen DF1,DF3,DF4,DF5 por validacion simple
 
+    #suscripcion --> email,#plan
+    email --> nombre_usuario
+    #plan --> nombre_plan,texto_condiciones,precio
+    #contendio --> titulo, sinopsis , duracion
+    email_adicional --> nombre_adicional
+    #suscripcion,email_adicional --> fecha_adicional
 
+#### Iteracion 3
 
+F3 cumple con BCNF pero F4 no cumple BCNF ya que sigue teniendo DF las cuales X no es superclave
+por lo que particionamos usando la DF3
+
+F4(**#Plan**,nombre_plan,text_condiciones,precio)
+F5(**#suscripcion,email_adicional,#contenido**, email, #plan, titulo,sinopsis, duracion, fecha_adicional)
+
+F4 ⋂ F5 --> #Plan no perdemos informacion
+En F5 valen DF1,DF4,DF6
+
+#### Iteracion 4
+
+F4 cumple con BCNF pero F5 no cumple ya que sigue teniendo DF de las cuales X no es superclave por lo que particionamos usando la DF4
+
+F5(**#Contendio**,titulo,sinopsis,duracion)
+F6(**#suscripcion,email_adicional,#contenido**, email, #plan,fecha_adicional)
+
+F5 ⋂ F6 --> #Contenido no perdemos informacion
+En F6 valen DF1,DF6
+
+#### Iteracion 5
+F5 cumple con BCNF pero F6 sigue teniendo DF de las cuales X no es superclave
+
+F7(**#Suscripcion**,email,#plan)
+F8(**#suscripcion,email_adicional,#contenido**,fecha_adicional)
+
+F7 ⋂ F8 --> #Contenido no perdemos informacion
+En F8 valen DF6
+
+#### Iteracion 6
+
+F7 cumple con BCNF pero F8 sigue teniendo DF de las cuales X no es superclave
+por lo que particionamos usando la DF6
+
+F9(**#suscripcion,email_adicional**,fecha_adicional)
+F10(**#suscripcion,email_adicional,#contenido**)
+
+F9 ⋂ F10 --> #suscripcion,email_adicional no perdemos informacion
+
+Y con esta ultima iteracion tenemos como resultado
+
+* F1(**email_adicional**,nombre_adicional)
+* F3(**email**,nombre_usuario)
+* F4(**#plan**,nombre_plan,text_condiciones,precio)
+* F5(**#contendio**,titulo,sinopsis,duracion)
+* F7(**#suscripcion**,email,#plan)
+* F9(**#suscripcion,email_adicional**,fecha_adicional)
+* F10(**#suscripcion,email_adicional,#contenido**)
+
+ahora cada tabla se encuentra en BCNF
 
