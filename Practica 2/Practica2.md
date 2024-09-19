@@ -213,7 +213,7 @@ Particionamos el esquema usando la DF5 `email_adicinal --> nombre_adicional`
 * F2(**#suscripcion,email_adicional,#contenido**, email, nombre_usuario, #plan, nombre_plan texto_condiciones, precio, titulo,sinopsis, duracion, fecha_adicional)
 
 F1 esta en BCNF porque solo vale la DF5 donde email_adicional es clave del esquema.
-En F2 valen DF1, DF2,DF3, DF4,DF6 por validacion simple
+En F2 valen DF1, DF2,DF3, DF4,DF6 por validacion simple no se pierden dependecias funcionales
 F1 ⋂ F2 = email_adicional, que es clave en F1. Por lo tanto, no se perdió información.
 
 
@@ -240,7 +240,7 @@ F4(**#suscripcion,email_adicional,#contenido**, email, #plan, nombre_plan texto_
 
 
 F3 ⋂ F4 --> email no perdemos informacion
-En F4 valen DF1,DF3,DF4,DF5 por validacion simple
+En F4 valen DF1,DF3,DF4,DF5 por validacion simple no se pierden dependecias funcionales
 
     #suscripcion --> email,#plan
     email --> nombre_usuario
@@ -254,50 +254,403 @@ En F4 valen DF1,DF3,DF4,DF5 por validacion simple
 F3 cumple con BCNF pero F4 no cumple BCNF ya que sigue teniendo DF las cuales X no es superclave
 por lo que particionamos usando la DF3
 
-F4(**#Plan**,nombre_plan,text_condiciones,precio)
-F5(**#suscripcion,email_adicional,#contenido**, email, #plan, titulo,sinopsis, duracion, fecha_adicional)
+F5(**#Plan**,nombre_plan,text_condiciones,precio)
+F6(**#suscripcion,email_adicional,#contenido**, email, #plan, titulo,sinopsis, duracion, fecha_adicional)
 
-F4 ⋂ F5 --> #Plan no perdemos informacion
-En F5 valen DF1,DF4,DF6
+F5 ⋂ F6 --> #Plan no perdemos informacion
+En F6 valen DF1,DF4,DF6. No se pierden dependecias funcionales
 
 #### Iteracion 4
 
-F4 cumple con BCNF pero F5 no cumple ya que sigue teniendo DF de las cuales X no es superclave por lo que particionamos usando la DF4
+F5 cumple con BCNF pero F6 no cumple ya que sigue teniendo DF de las cuales X no es superclave por lo que particionamos usando la DF4
 
-F5(**#Contendio**,titulo,sinopsis,duracion)
-F6(**#suscripcion,email_adicional,#contenido**, email, #plan,fecha_adicional)
-
-F5 ⋂ F6 --> #Contenido no perdemos informacion
-En F6 valen DF1,DF6
-
-#### Iteracion 5
-F5 cumple con BCNF pero F6 sigue teniendo DF de las cuales X no es superclave
-
-F7(**#Suscripcion**,email,#plan)
-F8(**#suscripcion,email_adicional,#contenido**,fecha_adicional)
+F7(**#Contendio**,titulo,sinopsis,duracion)
+F8(**#suscripcion,email_adicional,#contenido**, email, #plan,fecha_adicional)
 
 F7 ⋂ F8 --> #Contenido no perdemos informacion
-En F8 valen DF6
+En F8 valen DF1,DF6. No se pierden dependecias funcionales
+
+#### Iteracion 5
+F7 cumple con BCNF pero F8 sigue teniendo DF de las cuales X no es superclave
+
+F9(**#Suscripcion**,email,#plan)
+F10(**#suscripcion,email_adicional,#contenido**,fecha_adicional)
+
+F9 ⋂ F10 --> #Contenido no perdemos informacion
+En F10 valen DF6. No se pierden dependecias funcionales
 
 #### Iteracion 6
 
-F7 cumple con BCNF pero F8 sigue teniendo DF de las cuales X no es superclave
+F9 cumple con BCNF pero F10 sigue teniendo DF de las cuales X no es superclave
 por lo que particionamos usando la DF6
 
-F9(**#suscripcion,email_adicional**,fecha_adicional)
-F10(**#suscripcion,email_adicional,#contenido**)
+F11(**#suscripcion,email_adicional**,fecha_adicional)
+F12(**#suscripcion,email_adicional,#contenido**)
 
-F9 ⋂ F10 --> #suscripcion,email_adicional no perdemos informacion
+F11 ⋂ F12 --> #suscripcion,email_adicional no perdemos informacion
 
 Y con esta ultima iteracion tenemos como resultado
 
 * F1(**email_adicional**,nombre_adicional)
 * F3(**email**,nombre_usuario)
-* F4(**#plan**,nombre_plan,text_condiciones,precio)
-* F5(**#contendio**,titulo,sinopsis,duracion)
-* F7(**#suscripcion**,email,#plan)
-* F9(**#suscripcion,email_adicional**,fecha_adicional)
-* F10(**#suscripcion,email_adicional,#contenido**)
+* F5(**#plan**,nombre_plan,text_condiciones,precio)
+* F7(**#contendio**,titulo,sinopsis,duracion)
+* F9(**#suscripcion**,email,#plan)
+* F11(**#suscripcion,email_adicional**,fecha_adicional)
+* F12(**#suscripcion,email_adicional,#contenido**)
 
 ahora cada tabla se encuentra en BCNF
+
+#Falta 4FN
+
+# Ejercicio 7
+
+7. MEDICION_AMBIENTAL(#medicion, #pozo, valor_medicion, #parametro, fecha_medicion,
+cuil_operario, #instrumento, nombre_parametro, valor_ref, descripcion_pozo,
+fecha_perforacion, nombre_parametro, apellido_operario, nombre_operario, fecha_nacimiento,
+marca_instrumento, modelo_instrumento, dominio_vehiculo, fecha_adquisicion)
+
+Donde:
+
+    ● Cada medición es realizada por un operario en un pozo, en una fecha determinada. En
+    ella se miden varios parámetros, y para cada uno se obtiene un valor. Notar que un
+    mismo parámetro (#parametro) puede ser medido en diferentes mediciones.
+    Independientemente de las mediciones, todo parámetro tiene un nombre y valor de
+    referencia, y el #parametro es único en el sistema.
+  
+    ● En cada medición se utilizan varios instrumentos, independientemente de los
+    parámetros medidos. De cada instrumento se conoce la marca y modelo.
+ 
+    ● De cada operario se conoce su cuit, nombre, apellido y fecha de nacimiento.
+ 
+    ● La empresa cuenta con vehículos, y de cada uno se conoce la fecha en la que fue
+    adquirido. El dominio (patente) de cada vehículo es único en el sistema.
+  
+    ● Un pozo tiene una descripción y una fecha de perforación. El identificador #pozo es único en el sistema.'
+
+
+* DF1: #medicion --> #pozo,cuil_operario,fecha_medicion
+* DF2: #pozo --> descripcion_pozo,fecha_perforacion
+* DF3: #medicion,#parametro --> valor_medicion
+* DF4: cuil_operario --> nombre_operario, apellido_operario,fecha_nacimiento
+* DF5: dominio_vehiculo --> fecha_adquisicion
+* DF6: #parametro --> nombre_parametro,valor_referencia
+* DF7: #intrumento --> marca_intrumento,modelo_intrumento
+
+* CC {**#medicion,#parametro,#intrumento,dominio_vehiculo**}
+
+# Iteracion 1
+
+MEDICION_AMBIENTAL no esta en BCNF y podemos ver que tenemos varias DF de las cuales X no es superclave, por lo que usamos DF4 para particionar en 2 tablas F1,F2
+
+F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
+
+F2(**#medicion, #parametro , #instrumento, dominio_vehiculo**, valor_medicion, #pozo, fecha_medicion,
+cuil_operario, valor_referencia, descripcion_pozo,fecha_perforacion, nombre_parametro,marca_instrumento, modelo_instrumento, fecha_adquisicion)
+
+Si realizamos F1 ⋂ F2 --> ** cuil_operario** es super clave de F1 por lo que no se pierde informacion
+En F2 valen DF1,DF2,DF3,DF5,DF6,DF7.No se pierden dependecias funcionales
+
+# Iteracion 2
+
+F1 se encuentra en BCNF puesto que en la DF4 'X' es superclave del esquema
+
+F2 no se encuentra en BCNF y podemos ver que tenemos varias DF de las cuales X no es superclave 
+
+Particionamos F2 usando la DF5 'dominio_vehiculo' --> fecha_adiquisicion
+
+F3(**dominio_vehiculo**,fecha_adquisicion)
+F4(**#medicion, #parametro , #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+cuil_operario, valor_referencia, descripcion_pozo,fecha_perforacion, nombre_parametro,marca_instrumento, modelo_instrumento)
+
+Si realizamos F3 ⋂ F4 --> **dominio_vehiculo** es superclave de F3 por lo que no se pierde informacion
+En F4 valen DF1,DF2,DF3,DF6,DF7.No se pierden dependecias funcionales
+
+# Iteracion 3
+
+F3 se encuentra en BCNF puesto que en la DF5 'X' es superclave del esquema
+
+F4 no se encuentra en BCNF y podemos ver que tenemos aun varias DF de las cuales 'X ' no es superclave
+
+Particionamos F4 usando la DF6 '#parametro --> nombre_parametro,valor_referencia'
+
+F5(**#parametro**,nombre_parametro,valor_referencia)
+F6(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+cuil_operario, descripcion_pozo,fecha_perforacion,marca_instrumento modelo_instrumento)
+
+Si realizamos F5 ⋂ F6 --> **#parametro** es superclave de F5 por lo que no se pierde informacion
+En F6 valen DF1,DF2,DF3,DF7.No se pierden dependecias funcionales
+
+# Iteracion 4
+
+F5 se encuentra en BCNF puesto que en la DF6 'X' es superclave del esquema
+F6 no se encuentra en BCNF y podemos ver que quedan DF de las cuales 'X' no es superclave
+
+Particionamos F6 usando la DF7 #intrumento --> marca_intrumento,modelo_intrumento
+
+F7(**#intrumento**,marca_instrumento,modelo_intrumento)
+F8(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+cuil_operario, descripcion_pozo,fecha_perforacion)
+
+Si realizamos F7 ⋂ F8 --> #intrumento es superclave F7 por lo que no perdemos informacion
+En F8 valen DF1,DF2,DF3.No se pierden dependecias funcionales
+
+# Iteracion 5 
+
+F7 se encuentra en BCNF puesto que en la DF7 'X' es superclave del esquema
+F8 no se encuentra en BCNF y podermo ver que quedan DF de las cuales 'X' no es superclave
+
+Particionamos F8 usando la DF2 #pozo --> descripcion_pozo,fecha_perforacion
+
+F9(**#pozo**, descripcion_pozo,fecha_perforacion)
+F10(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+cuil_operario)
+
+F9 ⋂ F10 --> #pozo es superclave de F9 por lo que no perdemos informacion
+En F10 valen DF1,DF3. No se pierden dependecias funcionales
+
+# Iteracion 6
+
+F9 se encuentra en BCNF puesto que en la DF2 'X' es superclave del esquema
+
+F10 no se encuentra en BCNF puesto que seguimos encontrando DF de las cuales 'X' no es superclave
+
+Particionamos F10 usando la DF1 #medicion --> #pozo,cuil_operario,fecha_medicion 
+
+F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
+F12(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion)
+
+Si realizamos F11 ⋂ F12 --> #medicion es superclave de F11 por lo que no perdemos informacion
+En F10 valen DF3. No se pierden dependecias funcionales
+
+# Iteracion 7
+
+F11 se encuentra en BCNF puesto que en la DF1 'X' es superclave del esquema
+F12 no se encuentra en BCNF puesto que nos queda un DF la cual 'X' no es superclave
+
+Particionamos F12 usando la DF3 #medicion,#parametro --> valor_medicion
+
+F13(**#medicion,#parametro**,valor_medicion)
+F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
+
+Si realizamos F13 ⋂ F14 --> #medicion,#parametro es superclave de F13 por lo que no perdemos informacion
+
+Y con la ultima particion no da como resultado 7 tablas normalizadas a BCNF
+
+F1,F3,F5,F7,F9,F11,F13 estan normalizadas a BCNF
+
+F14 está en BCFN, puesto que tiene una DF **trivial**.
+
+F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
+F3(**dominio_vehiculo**,fecha_adquisicion)
+F5(**#parametro**,nombre_parametro,valor_referencia)
+F7(**#intrumento**,marca_instrumento,modelo_intrumento)
+F9(**#pozo**, descripcion_pozo,fecha_perforacion)
+F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
+F13(**#medicion,#parametro**,valor_medicion)
+F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
+
+* CC {**#medicion,#parametro,#intrumento,dominio_vehiculo**}
+
+
+F14 aun asi no se encuentra en 4FN ya que tiene dos DMs no triviales
+
+ 1. #medicion >> #parametro
+ 2. #medicion >> #intrumento
+
+Por lo tanto el esquema no se encuentra en 4FN 
+
+Particionamos usando las DM 1 Y 2
+
+F15(**#medicion, #parametro, dominio_vehiculo**)
+F16(**#medicion, #instrumento, dominio_vehiculo**)
+
+Resutlado final: 
+
+    F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
+    F3(**dominio_vehiculo**,fecha_adquisicion)
+    F5(**#parametro**,nombre_parametro,valor_referencia)
+    F7(**#intrumento**,marca_instrumento,modelo_intrumento)
+    F9(**#pozo**, descripcion_pozo,fecha_perforacion)
+    F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
+    F13(**#medicion,#parametro**,valor_medicion)
+    F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
+    F15(**#medicion, #parametro, dominio_vehiculo**)
+    F16(**#medicion, #instrumento, dominio_vehiculo**)
+
+Termino el proceso de normalizacion a 4FN con las siguientes particiones
+
+# Ejercicio 8
+
+8. FESTIVALES (#festival, denominacion_festival, localidad, cuil_musico, nombre_musico, fecha_nacimiento, #banda, nombre_banda estilo_musical, #tema, nombre_tema, duracion, instrumento, cuil_auspiciante, url_plataforma_entradas, #sponsor)
+
+
+Donde:
+
+    ● Para cada festival se conoce su denominación y la localidad en la que se realiza. Más de un festival podría tener la misma denominación.
+
+    ● De cada banda se conoce su nombre y estilo musical.
+
+    ● De cada músico se conoce su cuil, nombre y su fecha de nacimiento. Tenga en cuenta que varios músicos podrían tener el mismo nombre.
+
+    ● Para cada tema interpretado por una banda en un festival se conoce su nombre y
+    duración. Además, de cada músico que participó en el tema se sabe con qué
+    instrumento lo hizo.
+
+    ● Los #tema pueden repetirse para las distintas bandas.
+
+    ● Un festival puede tener varios auspiciantes, y se vendieron entradas al mismo a través
+    de varias plataformas.
+
+    ● Se tiene además un registro de todas los sponsors que han participado de los distintos
+    festivales realizados.
+
+* DF1: #festival --> denominacion_festival,localidad
+* DF2: #banda --> nombre_banda,estilo_musical
+* DF3: cuil_musico --> nombre_musico,fecha_nacimiento
+* DF4: #tema,#banda,#festival --> nombre_tema,duracion
+* DF5: #tema,#musico --> instrumento
+
+CC `{**#festival,#banda,#tema,cuil_musico,cuil_auspiciantes,url_plataforma_entradas,#sponsor**}`
+
+# Iteracion 1
+
+FESTIVALES no se encuentra en BCNF ya que tiene varias DF de las cuales 'X' no son superclaves por lo que particionamos FESTIVALES en F1,F2 siguiendo la DF3 cuil_musico --> nombre_musico,fecha_nacimiento
+
+F1(**cuil_musico**,nombre_musico,fecha_nacimiento)
+F2(#festival, denominacion_festival, localidad, cuil_musico, #banda, nombre_banda estilo_musical, #tema, nombre_tema, duracion, instrumento, cuil_auspiciante, url_plataforma_entradas, #sponsor)
+
+Si realizamos F1 ⋂ F2 --> **cuil_musico** es superclave de F1 por lo que no perdemos informacion
+En F2 valen DF1,DF2,DF4,DF5. No se pierden dependecias funcionales
+
+# Iteracion 2
+
+F1 se encuentra en BCNF puesto que en la DF3 'X' es superclave del esquema
+F2 no se encuentra en BCNF ya que todavia tiene DF de las cuales 'X' no son superclaves
+
+Particionamos F2 usando DF2 #banda --> nombre_banda,estilo_musical
+
+F3(**#banda**,nombre_banda,estilo_musical)
+F4(#festival, denominacion_festival, localidad, cuil_musico, #banda, #tema, nombre_tema, duracion, instrumento, cuil_auspiciante, url_plataforma_entradas, #sponsor)
+
+Si realizamos F3 ⋂ F4 --> **#banda** es superclave de F3 por lo que no perdemos informacion
+En F4 valen DF1,DF4,DF5. No se pierden dependecias funcionales
+
+# Iteracion 3
+
+F3 se encuentra en BCNF puesto que en la DF2 'X' es superclave del esquema
+F4 no se encuentra en BCNF ya que todavia encontramos DF de las cuales 'X' no son superclaves
+
+Particionamos F4 usando la DF1 #festival --> denominacion_festival,localidad
+
+F5(**#festival**,denominacion_festival,localidad)
+F6(#festival, #banda, #tema, nombre_tema, duracion, instrumento, ,cuil_auspiciantes,url_plataforma_entradas,#sponsor)
+
+Si hacemos F5 ⋂ F6 --> **#festival** es superclave de F5 por lo que no perdemos informacion
+En F6 valen DF4 Y DF5. No se pierden dependecias funcionales
+
+# Iteracion 4 
+
+F5 se encuentra en BCNF puesto que en la DF1 'X' es superclave del esquema
+F6 no se encuentra en BCNF ya que presenta todavia DFs de las cuales 'X' no son superclaves
+
+Particionamos F6 usando la  DF4: #tema,#banda,#festival --> nombre_tema,duracion
+
+F7(**#tema,#banda,#festival**,nombre_tema,duracion)
+F8(#festival, #banda, #tema, instrumento ,cuil_auspiciantes,url_plataforma_entradas,#sponsor)
+
+Si hacemos F7 ⋂ F8 --> #tema,#banda,#festival es superclave de F7 por lo que no perdemos informacion
+En F8 valen DF5. Por validacion simple no se pierden DF
+
+# Iteracion 5
+
+F7 se encuentra en BCNF puesto que en la DF4 'X' es superclave del esquema
+F8 no se encuetra en BCNF ya que presenta una DF de la cual 'X' no es superclave del esquema
+
+Particionamos F8 usando la DF5 #tema,#musico --> instrumento
+
+F9(**#tema,#musico**,instrumento)
+F10(#festival, #banda, #tema ,cuil_auspiciantes,url_plataforma_entradas,#sponsor)
+
+Si hacemos F9 ⋂ F10 --> **#tema,#musico** es superclave de F9 por lo que no perdemos informacion
+En F9 vale DF5 y F10 esta normalizada a BCNF ya que presenta un DF trivial
+
+Como resultado obtenemos 6 tablas normalizadas a BCNF
+
+
+Resultado:
+
+    F1(**cuil_musico**,nombre_musico,fecha_nacimiento)
+    F3(**#banda**,nombre_banda,estilo_musical)
+    F5(**#festival**,denominacion_festival,localidad)
+    F7(**#tema,#banda,#festival**,nombre_tema,duracion)
+    F9(**#tema,#musico**,instrumento)
+    F10(#festival, #banda, #tema ,cuil_auspiciantes,url_plataforma_entradas,#sponsor)
+
+
+CC `{**#festival,#banda,#tema,cuil_musico,cuil_auspiciantes,url_plataforma_entradas,#sponsor**}
+
+#### Normalizacion a 4FN
+
+Dependencias Multivaluadas:
+
+1. festival >> cuil_auspiciantes
+2. festival >> url_plataforma_entrandas
+3. {} >> sponsor o ??? (festival >> sponsor)
+
+Analisis
+
+F10 no esta en 4FN ya que presenta dependencias multivaluadas no triviales
+
+Particionamos usando DM3 
+
+F11(#sponsor)
+F12(#festival, #banda, #tema ,cuil_auspiciantes,url_plataforma_entradas)
+
+F12 sigue sin estar en 4FN ya que tiene dependnecias multivaluadas no triviales
+
+Particionamos usando DM1 y DM2
+
+F13(#festival, #banda, #tema ,cuil_auspiciantes)
+F14(#festival, #banda, #tema ,url_plataforma_entradas)
+
+F13 Y F14 estan en la 4FN ya que bi valen dependencias multivaluadas que no sean triviales
+
+#### Esquema final resultante
+
+    F1(**cuil_musico**,nombre_musico,fecha_nacimiento)
+    F3(**#banda**,nombre_banda,estilo_musical)
+    F5(**#festival**,denominacion_festival,localidad)
+    F7(**#tema,#banda,#festival**,nombre_tema,duracion)
+    F9(**#tema,#musico**,instrumento)
+    F11(#sponsor)
+    F13(#festival, #banda, #tema ,cuil_auspiciantes)
+    F14(#festival, #banda, #tema ,url_plataforma_entradas)
+
+No se encuentran dependencias multivaluadas no triviales. 
+
+# Ejercicio 9
+
+9. TORNEOS (#torneo, nombre_torneo, año, #equipo, nombre_equipo, estadio_equipo, puesto,
+#reglamentacion, descripcion, #auspiciante)
+
+    ● De cada torneo, se conoce su identificador (#torneo, único en el sistema) y un nombre. Un mismo torneo tiene diferentes ediciones, cada edición se realiza en un año determinado y el mismo torneo no puede repetirse el mismo año. En un año pueden
+    realizarse varios torneos.
+
+    ● Cada edición de un torneo tiene diferentes auspiciantes, identificados por #auspiciante
+    (único en el sistema).
+
+    ● En cada edición de un torneo participan varios equipos. De cada equipo se conoce su nombre, su estadio y su #equipo, que no se repite para diferentes equipos.
+
+    ● Cada equipo finaliza una edición de un torneo en un puesto. Dos o más equipos no pueden finalizar en un mismo puesto.
+
+    ● Además, se conoce un conjunto de reglamentaciones, identificadas por #reglamentación, aplicables a estos torneos.
+
+
+* DF1: #torneo --> nombre_toreno,#reglamentacion
+* DF2: #equipo --> nombre_equipo,estadio_equipo
+* DF3: #torneo,#equipo,año --> puesto
+* DF4: #reglamentacion --> descripcion
+
+CC `{#toreno,#equipo,año,#auspiciante}`
 
