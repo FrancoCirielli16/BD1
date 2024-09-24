@@ -235,8 +235,8 @@ F1 cumple con BCNF pero F2 sigue teniendo DF no triviales o en la que X no es un
 
 por lo que particionamos F2 siguiendo el esquema DF2
 
-F3(**email**,nombre_usuario)
-F4(**#suscripcion,email_adicional,#contenido**, email, #plan, nombre_plan texto_condiciones, precio, titulo,sinopsis, duracion, fecha_adicional)
+    F3(**email**,nombre_usuario)
+    F4(**#suscripcion,email_adicional,#contenido**, email, #plan, nombre_plan texto_condiciones, precio, titulo,sinopsis, duracion, fecha_adicional)
 
 
 F3 ⋂ F4 --> email no perdemos informacion
@@ -254,8 +254,8 @@ En F4 valen DF1,DF3,DF4,DF5 por validacion simple no se pierden dependecias func
 F3 cumple con BCNF pero F4 no cumple BCNF ya que sigue teniendo DF las cuales X no es superclave
 por lo que particionamos usando la DF3
 
-F5(**#Plan**,nombre_plan,text_condiciones,precio)
-F6(**#suscripcion,email_adicional,#contenido**, email, #plan, titulo,sinopsis, duracion, fecha_adicional)
+    F5(**#Plan**,nombre_plan,text_condiciones,precio)
+    F6(**#suscripcion,email_adicional,#contenido**, email, #plan, titulo,sinopsis, duracion, fecha_adicional)
 
 F5 ⋂ F6 --> #Plan no perdemos informacion
 En F6 valen DF1,DF4,DF6. No se pierden dependecias funcionales
@@ -264,8 +264,8 @@ En F6 valen DF1,DF4,DF6. No se pierden dependecias funcionales
 
 F5 cumple con BCNF pero F6 no cumple ya que sigue teniendo DF de las cuales X no es superclave por lo que particionamos usando la DF4
 
-F7(**#Contendio**,titulo,sinopsis,duracion)
-F8(**#suscripcion,email_adicional,#contenido**, email, #plan,fecha_adicional)
+    F7(**#Contendio**,titulo,sinopsis,duracion)
+    F8(**#suscripcion,email_adicional,#contenido**, email, #plan,fecha_adicional)
 
 F7 ⋂ F8 --> #Contenido no perdemos informacion
 En F8 valen DF1,DF6. No se pierden dependecias funcionales
@@ -273,8 +273,8 @@ En F8 valen DF1,DF6. No se pierden dependecias funcionales
 #### Iteracion 5
 F7 cumple con BCNF pero F8 sigue teniendo DF de las cuales X no es superclave
 
-F9(**#Suscripcion**,email,#plan)
-F10(**#suscripcion,email_adicional,#contenido**,fecha_adicional)
+    F9(**#Suscripcion**,email,#plan)
+    F10(**#suscripcion,email_adicional,#contenido**,fecha_adicional)
 
 F9 ⋂ F10 --> #Contenido no perdemos informacion
 En F10 valen DF6. No se pierden dependecias funcionales
@@ -284,8 +284,8 @@ En F10 valen DF6. No se pierden dependecias funcionales
 F9 cumple con BCNF pero F10 sigue teniendo DF de las cuales X no es superclave
 por lo que particionamos usando la DF6
 
-F11(**#suscripcion,email_adicional**,fecha_adicional)
-F12(**#suscripcion,email_adicional,#contenido**)
+    F11(**#suscripcion,email_adicional**,fecha_adicional)
+    F12(**#suscripcion,email_adicional,#contenido**)
 
 F11 ⋂ F12 --> #suscripcion,email_adicional no perdemos informacion
 
@@ -343,10 +343,10 @@ Donde:
 
 MEDICION_AMBIENTAL no esta en BCNF y podemos ver que tenemos varias DF de las cuales X no es superclave, por lo que usamos DF4 para particionar en 2 tablas F1,F2
 
-F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
+    F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
 
-F2(**#medicion, #parametro , #instrumento, dominio_vehiculo**, valor_medicion, #pozo, fecha_medicion,
-cuil_operario, valor_referencia, descripcion_pozo,fecha_perforacion, nombre_parametro,marca_instrumento, modelo_instrumento, fecha_adquisicion)
+    F2(**#medicion, #parametro , #instrumento, dominio_vehiculo**, valor_medicion, #pozo, fecha_medicion,
+    cuil_operario, valor_referencia, descripcion_pozo,fecha_perforacion, nombre_parametro,marca_instrumento, modelo_instrumento, fecha_adquisicion)
 
 Si realizamos F1 ⋂ F2 --> ** cuil_operario** es super clave de F1 por lo que no se pierde informacion
 En F2 valen DF1,DF2,DF3,DF5,DF6,DF7.No se pierden dependecias funcionales
@@ -359,9 +359,9 @@ F2 no se encuentra en BCNF y podemos ver que tenemos varias DF de las cuales X n
 
 Particionamos F2 usando la DF5 'dominio_vehiculo' --> fecha_adiquisicion
 
-F3(**dominio_vehiculo**,fecha_adquisicion)
-F4(**#medicion, #parametro , #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
-cuil_operario, valor_referencia, descripcion_pozo,fecha_perforacion, nombre_parametro,marca_instrumento, modelo_instrumento)
+    F3(**dominio_vehiculo**,fecha_adquisicion)
+    F4(**#medicion, #parametro , #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+    cuil_operario, valor_referencia, descripcion_pozo,fecha_perforacion, nombre_parametro,marca_instrumento, modelo_instrumento)
 
 Si realizamos F3 ⋂ F4 --> **dominio_vehiculo** es superclave de F3 por lo que no se pierde informacion
 En F4 valen DF1,DF2,DF3,DF6,DF7.No se pierden dependecias funcionales
@@ -374,9 +374,9 @@ F4 no se encuentra en BCNF y podemos ver que tenemos aun varias DF de las cuales
 
 Particionamos F4 usando la DF6 '#parametro --> nombre_parametro,valor_referencia'
 
-F5(**#parametro**,nombre_parametro,valor_referencia)
-F6(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
-cuil_operario, descripcion_pozo,fecha_perforacion,marca_instrumento modelo_instrumento)
+    F5(**#parametro**,nombre_parametro,valor_referencia)
+    F6(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+    cuil_operario, descripcion_pozo,fecha_perforacion,marca_instrumento modelo_instrumento)
 
 Si realizamos F5 ⋂ F6 --> **#parametro** es superclave de F5 por lo que no se pierde informacion
 En F6 valen DF1,DF2,DF3,DF7.No se pierden dependecias funcionales
@@ -388,9 +388,9 @@ F6 no se encuentra en BCNF y podemos ver que quedan DF de las cuales 'X' no es s
 
 Particionamos F6 usando la DF7 #intrumento --> marca_intrumento,modelo_intrumento
 
-F7(**#intrumento**,marca_instrumento,modelo_intrumento)
-F8(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
-cuil_operario, descripcion_pozo,fecha_perforacion)
+    F7(**#intrumento**,marca_instrumento,modelo_intrumento)
+    F8(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+    cuil_operario, descripcion_pozo,fecha_perforacion)
 
 Si realizamos F7 ⋂ F8 --> #intrumento es superclave F7 por lo que no perdemos informacion
 En F8 valen DF1,DF2,DF3.No se pierden dependecias funcionales
@@ -402,9 +402,9 @@ F8 no se encuentra en BCNF y podermo ver que quedan DF de las cuales 'X' no es s
 
 Particionamos F8 usando la DF2 #pozo --> descripcion_pozo,fecha_perforacion
 
-F9(**#pozo**, descripcion_pozo,fecha_perforacion)
-F10(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
-cuil_operario)
+    F9(**#pozo**, descripcion_pozo,fecha_perforacion)
+    F10(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion,#pozo, fecha_medicion,
+    cuil_operario)
 
 F9 ⋂ F10 --> #pozo es superclave de F9 por lo que no perdemos informacion
 En F10 valen DF1,DF3. No se pierden dependecias funcionales
@@ -417,8 +417,8 @@ F10 no se encuentra en BCNF puesto que seguimos encontrando DF de las cuales 'X'
 
 Particionamos F10 usando la DF1 #medicion --> #pozo,cuil_operario,fecha_medicion 
 
-F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
-F12(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion)
+    F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
+    F12(**#medicion, #parametro, #instrumento, dominio_vehiculo**, valor_medicion)
 
 Si realizamos F11 ⋂ F12 --> #medicion es superclave de F11 por lo que no perdemos informacion
 En F10 valen DF3. No se pierden dependecias funcionales
@@ -430,8 +430,8 @@ F12 no se encuentra en BCNF puesto que nos queda un DF la cual 'X' no es supercl
 
 Particionamos F12 usando la DF3 #medicion,#parametro --> valor_medicion
 
-F13(**#medicion,#parametro**,valor_medicion)
-F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
+    F13(**#medicion,#parametro**,valor_medicion)
+    F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
 
 Si realizamos F13 ⋂ F14 --> #medicion,#parametro es superclave de F13 por lo que no perdemos informacion
 
@@ -441,14 +441,14 @@ F1,F3,F5,F7,F9,F11,F13 estan normalizadas a BCNF
 
 F14 está en BCFN, puesto que tiene una DF **trivial**.
 
-F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
-F3(**dominio_vehiculo**,fecha_adquisicion)
-F5(**#parametro**,nombre_parametro,valor_referencia)
-F7(**#intrumento**,marca_instrumento,modelo_intrumento)
-F9(**#pozo**, descripcion_pozo,fecha_perforacion)
-F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
-F13(**#medicion,#parametro**,valor_medicion)
-F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
+    F1(**cuil_operario**,nombre_operario,apellido_operario,fecha_nacimiento)
+    F3(**dominio_vehiculo**,fecha_adquisicion)
+    F5(**#parametro**,nombre_parametro,valor_referencia)
+    F7(**#intrumento**,marca_instrumento,modelo_intrumento)
+    F9(**#pozo**, descripcion_pozo,fecha_perforacion)
+    F11(**#medicion**, #pozo,cuil_operario,fecha_medicion)
+    F13(**#medicion,#parametro**,valor_medicion)
+    F14(**#medicion, #parametro, #instrumento, dominio_vehiculo**)
 
 * CC {**#medicion,#parametro,#intrumento,dominio_vehiculo**}
 
@@ -457,13 +457,15 @@ F14 aun asi no se encuentra en 4FN ya que tiene dos DMs no triviales
 
  1. #medicion >> #parametro
  2. #medicion >> #intrumento
+ 3. {} >> dominio_vehiculos
+#FALTO DOMINIO DE LOS VEHIUCLOS REHACER
 
 Por lo tanto el esquema no se encuentra en 4FN 
 
 Particionamos usando las DM 1 Y 2
 
-F15(**#medicion, #parametro, dominio_vehiculo**)
-F16(**#medicion, #instrumento, dominio_vehiculo**)
+    F15(**#medicion, #parametro, dominio_vehiculo**)
+    F16(**#medicion, #instrumento, dominio_vehiculo**)
 
 Resutlado final: 
 
@@ -509,7 +511,9 @@ Donde:
 * DF2: #banda --> nombre_banda,estilo_musical
 * DF3: cuil_musico --> nombre_musico,fecha_nacimiento
 * DF4: #tema,#banda,#festival --> nombre_tema,duracion
-* DF5: #tema,#musico --> instrumento
+* DF5: #tema,#musico --> instrumento # MAL falta la banda y cuil_musico 
+
+REHACER
 
 CC `{**#festival,#banda,#tema,cuil_musico,cuil_auspiciantes,url_plataforma_entradas,#sponsor**}`
 
@@ -604,15 +608,15 @@ F10 no esta en 4FN ya que presenta dependencias multivaluadas no triviales
 
 Particionamos usando DM3 
 
-F11(#sponsor)
-F12(#festival, #banda, #tema ,cuil_auspiciantes,url_plataforma_entradas)
+    F11(#sponsor)
+    F12(#festival, #banda, #tema ,cuil_auspiciantes,url_plataforma_entradas)
 
 F12 sigue sin estar en 4FN ya que tiene dependnecias multivaluadas no triviales
 
 Particionamos usando DM1 y DM2
 
-F13(#festival, #banda, #tema ,cuil_auspiciantes)
-F14(#festival, #banda, #tema ,url_plataforma_entradas)
+    F13(#festival, #banda, #tema ,cuil_auspiciantes)
+    F14(#festival, #banda, #tema ,url_plataforma_entradas)
 
 F13 Y F14 estan en la 4FN ya que bi valen dependencias multivaluadas que no sean triviales
 
