@@ -32,7 +32,7 @@ compatibles, es decir, deben cumplir las siguientes condiciones:
 [x] Deben tener la misma cantidad de columnas 
 [x] Las columnas deben ser del mismo dominio 
 [x] El orden de los columnas debe ser el mismo 
-[x] Las columnas deben tener igual nombre 
+[ ] Las columnas deben tener igual nombre 
  
  
 2)  ¿Para cuáles de las siguientes operaciones es necesario que los operandos 
@@ -83,11 +83,12 @@ RES = (#vuelo, aeropuerto_salida, aeropuerto_destino, fecha_vuelo, #reserva, #vu
 
 B) Obtener el listado de montos de reservas realizadas para vuelos efectuados el 
 pasado Agosto desde Buenos Aires a Córdoba. 
+
 VUELOS_BUE_CBA <— σ ciudad_salida=“Buenos Aires” AND ciudad_destino=“Córdoba” VUELO 
 RESERV_AGO <— ( σ fecha_reserva >= 1/8/2024 AND fecha_reserva <= 31/8/2024 RESERVA) |X| VUELOS_BUE_CBA 
 RES <— Π monto RESERV_AGO 
 
-Si obtiene las reservas
+No se obtiene las reservas ciudad_destino y ciudad_salida no existen
  
 
 C) Obtener el/los pasajeros que solo hayan reservado vuelos cuyo aeropuerto de 
@@ -148,7 +149,7 @@ RES <- Π nombreCompleto (σ añoDeIngreso = 2019 (ESTUDIANTE))
 b) Obtener el nombre de los estudiantes con nacionalidad “Argentina” que NO estén en la 
 carrera con código “LI07” 
 
-ArgentinosEnOtrasCarreras <- σ nacionalidad = 'Argentina' (ESTUDIANTE) - σ códigoDeCarrera = 'LI07' (ESTUDIANTE)
+ArgentinosEnOtrasCarreras <- σ nacionalidad = 'Argentina' and códigoDeCarrera <> 'LI07' (ESTUDIANTE)
 
 
 c) Obtener el legajo de los estudiantes que se hayan anotado en TODAS las materias. 
@@ -166,18 +167,24 @@ CURSO_REALIZADO ( #empleado, #curso )
 a) ¿Quiénes son los empleados que han hecho todos los cursos, independientemente de qué 
 departamento los exija? 
 
-TodosLosCursos <- Π #empleado ((CURSO_REALIZADO) % Π #curso (CURSO_EXIGIDO))
+TodosLosCursos <- (CURSO_REALIZADO) % Π #curso (CURSO_EXIGIDO)
 
 
 
 b) ¿Quiénes son los empleados que ya han realizado todos los cursos exigidos por sus 
 departamentos? 
 
-
+Mal division no es -
 CursosExigidos <- Π #empleado, #curso (LUGAR_TRABAJO |X| CURSO_EXIGIDO)
 TodosLosCursosExigidosPorDep <- Π #empleado (CURSO_REALIZADO % CursosExigidos)
 
- 
+Correcion 
+
+EmpleadoNecesitaCurso <- Π (Lugar_Trabajo |X| Curso_Exigido)
+EmpleadoFaltaCurso <- (EmpleadoNecesitaCurso - Curso_Realizado)
+EmpleadosQueHicieronTodos <- EmpleadoNecesitaCurso - EmpleadoFaltaCurso #PULIR
+
+
 9) Fabricantes de Muebles 
  
 TIPOMUEBLE ( id_tipomueble, descripción ) 
@@ -190,15 +197,13 @@ MUEBLEAMBIENTE ( id_mueble, id_ambiente )
  
 a.  Obtener los nombres de los fabricantes que fabrican muebles en todos los tipos de madera. 
 
-MueblesMadera <- Π id_mueble, id_tipomadera MUEBLE
-IdMaderas <-  Π id_tipomadera (TIPOMADERA)
-TodosFabriantes <- Π id_fabricante (MUEBLE % Π IdMaderas)
+TodosFabriantes <- Π id_fabricante (Π id_fabricante,id_tipomadera MUEBLE % Π id_tipomadera (TIPOMADERA))
 RES <- Π nombrefabricante (FABRICANTE |X| TodosFabriantes )
 
 b.  Obtener los nombres de los fabricantes que sólo fabrican muebles en Pino. 
 
-MaderaPino <- Π id_tipomadera (σ = Pino (TIPOMADERA))
-MaderaDistintaPino <- Π id_tipomadera (σ <> Pino (TIPOMADERA))
+MaderaPino <- Π id_tipomadera (σ nombreMadrea = Pino (TIPOMADERA))
+MaderaDistintaPino <- Π id_tipomadera (σ nombreMadrea <> Pino (TIPOMADERA))
 FabricantesPino <- Π id_fabricante,nombrefabricante (FABRICANTE |X| MaderaPino)
 FabricantesDistintoPino <- Π id_fabricante,nombrefabricante (FABRICANTE |X|MaderaDistintaPino)
 FabricantesSoloPino <- Π nombrefabricante (FabricantesPino - FabricantesDistintoPino)
@@ -206,15 +211,25 @@ FabricantesSoloPino <- Π nombrefabricante (FabricantesPino - FabricantesDistint
 c.  Obtener los nombres de los fabricantes que fabrican muebles para todos los ambientes. 
 
 AmbientesMueble <- (MUEBLE |X| MUEBLEAMBIENTE)
-Π nombrefabricante FABRICANTE |X| (AmbientesMueble % Π id_ambiente MUEBLEAMBIENTE)
+Π nombrefabricante FABRICANTE |X| (Π id_mueble, id_tipomueble, id_fabricante AmbientesMueble % Π id_ambiente AMBIENTE)
 
 d.  Obtener los nombres de los fabricantes que sólo fabrican muebles para oficina. 
+
+MuebleOficina <- Π id_ambiente (σ descripcionambiente = Oficina (AMBIENTE))
+MuebleNoOficina <- Π id_ambiente (σ descripcionambiente <> Oficina (AMBIENTE ))
+FabricantesOficina <- Π id_fabricante,nombrefabricante (FABRICANTE |X| MuebleOficina)
+FabricantesDistintoOficina <- Π id_fabricante,nombrefabricante (FABRICANTE |X| MuebleNoOficina)
+FabricantesSoloOficina <- Π nombrefabricante (FabricantesOficina  - FabricantesDistintoOficina)
 
 
 e.  Obtener los nombres de los fabricantes que sólo fabrican muebles para baño y cocina.
 
 
 f.  Obtener los nombres de los fabricantes que producen muebles de cedro y roble. 
-
+MaderaRoble <- Π id_tipomadera (σ nombreMadrea = roble (TIPOMADERA))
+MaderaCedro <- Π id_tipomadera (σ nombreMadrea = cedro (TIPOMADERA))
+FabricanteRoble <- Π id_fabricante,nombrefabricante(FABRICANTE |X| MaderaRoble)
+FabricanteCedro <- Π id_fabricante,nombrefabricante(FABRICANTE |X| MaderaCedro)
+Π nombrefabricante (FabricanteRoble ∩ FabricanteCedro)
 
 g.  Obtener los nombres de los fabricantes que producen muebles de melamina o MDF
