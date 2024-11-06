@@ -172,7 +172,7 @@ Mal division, es -
 
 Correcion 
 
-    EmpleadoNecesitaCurso <- Π (Lugar_Trabajo |X| Curso_Exigido)
+    EmpleadoNecesitaCurso <- Π #empleado, #curso (Lugar_Trabajo |X| Curso_Exigido)
     EmpleadoFaltaCurso <- (EmpleadoNecesitaCurso - Curso_Realizado)
     EmpleadosQueHicieronTodos <- EmpleadoNecesitaCurso - EmpleadoFaltaCurso #PULIR
 

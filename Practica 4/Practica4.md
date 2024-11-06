@@ -302,13 +302,13 @@ en la que se realiza esta carga y además del usuario con el se realiza.
             
             START TRANSACTION;
             
-            -- CREATE TABLE IF NOT EXISTS appointments_per_patient (
-            --     idApP INT AUTO_INCREMENT PRIMARY KEY,
-            --     patient_id INT NOT NULL,
-            --     count_appointments INT NOT NULL,
-            --     last_update DATETIME NOT NULL,
-            --     user VARCHAR(255) NOT NULL
-            -- );
+                -- CREATE TABLE IF NOT EXISTS appointments_per_patient (
+                --     idApP INT AUTO_INCREMENT PRIMARY KEY,
+                --     patient_id INT NOT NULL,
+                --     count_appointments INT NOT NULL,
+                --     last_update DATETIME NOT NULL,
+                --     user VARCHAR(255) NOT NULL
+                -- );
 
             INSERT INTO appointments_per_patient (patient_id, count_appointments, last_update, user)
             SELECT p.patient_id, COUNT(*) AS count_appointments, NOW() AS last_update, p.patient_name
@@ -333,7 +333,7 @@ APPOINTMENTS PER PATIENT.
 
      DELIMITER //
 
-        
+        -- DROP TABLE IF EXISTS appointments_per_patient;
         -- DROP PROCEDURE IF EXISTS calcular_cantidad_appointments;
         CREATE PROCEDURE calcular_cantidad_appointments (
         )
@@ -353,13 +353,7 @@ APPOINTMENTS PER PATIENT.
             
            
             START TRANSACTION;
-			-- CREATE TABLE IF NOT EXISTS appointments_per_patient (
-            --     idApP INT AUTO_INCREMENT PRIMARY KEY,
-            --     patient_id INT NOT NULL,
-            --     count_appointments INT NOT NULL,
-            --     last_update DATETIME NOT NULL,
-            --     user VARCHAR(255) NOT NULL
-            -- );
+			
             
             OPEN cur;
 
@@ -370,14 +364,11 @@ APPOINTMENTS PER PATIENT.
                 END IF;
 
                 INSERT INTO appointments_per_patient (patient_id, count_appointments, last_update, user) -- ACA EL NOMBRE DE CADA COLUM
-                VALUES (patient_id, count_appointments, NOW(), CURRENT_USER()) -- ACA EL VALOR DE LOS ELEMENTOS
-                -- probar si es necesario para correrlo 2 veces ON DUPLICATE KEY UPDATE
-                --     count_appointments = VALUES(count_appointments),
-                --     last_update = VALUES(last_update),
-                --     user = VALUES(user);
+                VALUES (patient_id, count_appointments, NOW(), CURRENT_USER()); -- ACA EL VALOR DE LOS ELEMENTOS
+                
             END LOOP;
-            CLOSE cur;
-            COMMIT;
+			CLOSE cur;
+			COMMIT;
         END //
 
     DELIMITER ; 
@@ -413,22 +404,27 @@ PATIENT).
     DELIMITER //
 
     CREATE TRIGGER actualizar_appointment
-    AFTER INSERT -- dice despues de insertar 
+    AFTER INSERT 
     ON appointment FOR EACH ROW
     BEGIN
-        -- resolver con un if para saber si tenes que insertar la nueva tupla co el nuevo user (con el count en 1), o si ya estaba y hay que sumarle las cantidades 
+        
         DECLARE appointment_count INT;
         SELECT COUNT(*) INTO appointment_count
         FROM appointments_per_patient
         WHERE patient_id = NEW.patient_id;
         
-        INSERT INTO appointments_per_patient (patient_id, count_appointments, last_update, user)
-        VALUES (NEW.patient_id, appointment_count, NOW(), NEW.user)
-        ON DUPLICATE KEY UPDATE
-            count_appointments = appointment_count,
-            last_update = NOW(),
-            user = NEW.user;
-    END //
+        IF appointment_count = 0 THEN
+
+            INSERT INTO appointments_per_patient (patient_id, count_appointments, last_update, user)
+            VALUES (NEW.patient_id, appointment_count, NOW(), CURRENT_USER());
+        ELSE
+            UPDATE appointments_per_patient
+            SET count_appointments = count_appointments + 1,
+                last_update = NOW(),
+                user = CURRENT_USER()
+            WHERE patient_id = NEW.patient_id;
+		END IF;
+    END // 
 
     DELIMITER ;
 
