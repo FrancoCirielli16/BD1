@@ -208,11 +208,15 @@ los id de doctores de la ciudad donde vive el cliente.
     CREATE VIEW new_schema.doctors_per_patients AS 
     SELECT p.patient_id, d.doctor_id 
     FROM patient p
-    INNER JOIN medical_review mr ON p.patient_id = mr.patient_id
+    LEFT JOIN medical_review mr ON p.patient_id = mr.patient_id // sin importar si tiene atenciones, tiene que estar
     INNER JOIN doctor d ON d.doctor_id = mr.doctor_id
     WHERE p.patient_city = d.doctor_city;
 
 
+    PROBAR:
+    SELECT p.patient_id, d.doctor_id
+    FROM patient p 
+    INNER JOIN doctor d ON p.patient_city = d.doctor_city;
 
 ```
 
@@ -232,6 +236,8 @@ a. Realice la consulta sin utilizar la vista creada anteriormente
         FROM doctor d2
         WHERE d2.doctor_city = p.patient_city
     );
+
+    // Probar hacerlo con doble NOT IN (analogo a doble not exists)
 ```
 
 b. Realice la consulta utilizando la vista creada anteriormente 
@@ -274,7 +280,7 @@ user: varchar(16)
     `id_patient` INT(11),
     `count_appointments` INT(11),
     `last_update` DATETIME,
-    `user` VARCHAR(16)
+    `user` VARCHAR(255)
     );
 ```
 
@@ -289,22 +295,20 @@ en la que se realiza esta carga y además del usuario con el se realiza.
 
     DELIMITER //
 
-        DROP TABLE IF EXISTS appointments_per_patient;
-        DROP PROCEDURE IF EXISTS calcular_cantidad_appointments;
-        CREATE PROCEDURE calcular_cantidad_appointments (
-            IN p_user VARCHAR(16) 
-        )
+        -- DROP TABLE IF EXISTS appointments_per_patient;
+        -- DROP PROCEDURE IF EXISTS calcular_cantidad_appointments;
+        CREATE PROCEDURE calcular_cantidad_appointments ()
         BEGIN
             
             START TRANSACTION;
             
-            CREATE TABLE IF NOT EXISTS appointments_per_patient (
-                idApP INT AUTO_INCREMENT PRIMARY KEY,
-                patient_id INT NOT NULL,
-                count_appointments INT NOT NULL,
-                last_update DATETIME NOT NULL,
-                user VARCHAR(255) NOT NULL
-            );
+            -- CREATE TABLE IF NOT EXISTS appointments_per_patient (
+            --     idApP INT AUTO_INCREMENT PRIMARY KEY,
+            --     patient_id INT NOT NULL,
+            --     count_appointments INT NOT NULL,
+            --     last_update DATETIME NOT NULL,
+            --     user VARCHAR(255) NOT NULL
+            -- );
 
             INSERT INTO appointments_per_patient (patient_id, count_appointments, last_update, user)
             SELECT p.patient_id, COUNT(*) AS count_appointments, NOW() AS last_update, p.patient_name
@@ -330,15 +334,15 @@ APPOINTMENTS PER PATIENT.
      DELIMITER //
 
         
-        DROP PROCEDURE IF EXISTS calcular_cantidad_appointments;
+        -- DROP PROCEDURE IF EXISTS calcular_cantidad_appointments;
         CREATE PROCEDURE calcular_cantidad_appointments (
-            IN p_user VARCHAR(16) 
         )
         BEGIN
             DECLARE done INT DEFAULT 0;
             DECLARE patient_id INT;
             DECLARE count_appointments INT;
 
+            -- si el paciente no tiene atenciones, tendria que quedar 0. modificar a left join
             DECLARE cur CURSOR FOR
             SELECT p.patient_id, COUNT(*) AS count_appointments
             FROM patient p
@@ -347,13 +351,15 @@ APPOINTMENTS PER PATIENT.
 
             DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
             
-			CREATE TABLE IF NOT EXISTS appointments_per_patient (
-                idApP INT AUTO_INCREMENT PRIMARY KEY,
-                patient_id INT NOT NULL,
-                count_appointments INT NOT NULL,
-                last_update DATETIME NOT NULL,
-                user VARCHAR(255) NOT NULL
-            );
+           
+            START TRANSACTION;
+			-- CREATE TABLE IF NOT EXISTS appointments_per_patient (
+            --     idApP INT AUTO_INCREMENT PRIMARY KEY,
+            --     patient_id INT NOT NULL,
+            --     count_appointments INT NOT NULL,
+            --     last_update DATETIME NOT NULL,
+            --     user VARCHAR(255) NOT NULL
+            -- );
             
             OPEN cur;
 
@@ -364,14 +370,14 @@ APPOINTMENTS PER PATIENT.
                 END IF;
 
                 INSERT INTO appointments_per_patient (patient_id, count_appointments, last_update, user) -- ACA EL NOMBRE DE CADA COLUM
-                VALUES (patient_id, count_appointments, NOW(), p_user) -- ACA EL VALOR DE LOS ELEMENTOS
-                ON DUPLICATE KEY UPDATE
-                    count_appointments = VALUES(count_appointments),
-                    last_update = VALUES(last_update),
-                    user = VALUES(user);
+                VALUES (patient_id, count_appointments, NOW(), CURRENT_USER()) -- ACA EL VALOR DE LOS ELEMENTOS
+                -- probar si es necesario para correrlo 2 veces ON DUPLICATE KEY UPDATE
+                --     count_appointments = VALUES(count_appointments),
+                --     last_update = VALUES(last_update),
+                --     user = VALUES(user);
             END LOOP;
             CLOSE cur;
-
+            COMMIT;
         END //
 
     DELIMITER ; 
@@ -407,9 +413,10 @@ PATIENT).
     DELIMITER //
 
     CREATE TRIGGER actualizar_appointment
-    AFTER UPDATE 
+    AFTER INSERT -- dice despues de insertar 
     ON appointment FOR EACH ROW
     BEGIN
+        -- resolver con un if para saber si tenes que insertar la nueva tupla co el nuevo user (con el count en 1), o si ya estaba y hay que sumarle las cantidades 
         DECLARE appointment_count INT;
         SELECT COUNT(*) INTO appointment_count
         FROM appointments_per_patient
@@ -460,8 +467,8 @@ DELIMITER //
     FROM patient p
     WHERE p.patient_id = patient_id;
     
-    INSERT INTO appointment (patient_id, appointment_date, appointment_duration, contact_phone, appointment_address, observations, payment_card);
-    VALUES (patient_id, appointment_date, appointment_duration, contact_phone, appointment_address, NULL, NULL);
+    INSERT INTO appointment (patient_id, appointment_date, appointment_duration, contact_phone, observations, payment_card);
+    VALUES (patient_id, appointment_date, appointment_duration, contact_phone, appointment_address, NULL);
     
     INSERT INTO medical_review(patient_id,appointment_date,doctor_id);
     VALUES (patient_id, appointment_date ,doctor_id);
@@ -485,6 +492,8 @@ appointment_duration: 30
 contact_phone: +54 15 2913 9963
 appointment_address: ‘Hospital Italiano’
 medication_name: ‘Paracetamol’
+
+<!-- poner la instruccion CALL -->
 
 10. Considerando la siguiente consulta:
 

@@ -36,11 +36,8 @@ C.  Una entidad puede no tener un atributo identificador en el modelo ER F
 
 D.  No es correcto modelar atributos en las relaciones en un modelo ER F
  
-<<<<<<< HEAD
-=======
 ### Ejercicio 3 Verdadero/ Falso. Justificar
 ![alt text](imagenes/image-5.png)
->>>>>>> 71151d8b05bf868fead22a89864db8e83b7a48a6
 
 
 
@@ -59,11 +56,6 @@ D.  La relación pertenece está mal definida, ya que no puede haber atributos e
 
 E.  La agregación de la relación posee está correctamente definida ya que con una relación uno a muchos se puede agregar. 
 
-<<<<<<< HEAD
-F.  Con este diseño es posible conocer el saldo disponible del subsidio para futuras liquidaciones. 
-
-G.  El modelo no tiene redundancia de datos
-=======
 F.  Con este diseño es posible conocer el saldo disponible del subsidio para futuras 
 liquidaciones. 
 
@@ -271,4 +263,3 @@ Una red de farmacias desea mantener información acerca de los productos que com
 
 
 ![alt text](imagenes/punto11.drawio.png)
->>>>>>> 71151d8b05bf868fead22a89864db8e83b7a48a6
